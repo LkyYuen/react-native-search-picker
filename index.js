@@ -80,6 +80,9 @@ export default class SearchPicker extends Component {
       id: -1,
       name: searchedText
     };
+    console.log("searchedText", searchedText)
+    console.log("SPLIT", this.state.item.split(/(\d+)/))
+    // console.log(searchedText.split(/(\d+)/))
     this.setState({ listItems: ac, item: searchedText });
     const onTextChange = this.props.onTextChange || this.props.textInputProps.onTextChange || this.props.onChangeText || this.props.textInputProps.onChangeText;
     if (onTextChange && typeof onTextChange === 'function') {
@@ -208,16 +211,16 @@ export default class SearchPicker extends Component {
       <TextInput
         { ...textInputProps }
         onBlur={(e) => {
-          if (this.props.onBlur) {
+        if (this.props.onBlur) {
             this.props.onBlur(e);
-          }
-          if (this.props.textInputProps && this.props.textInputProps.onBlur) {
+        }
+        if (this.props.textInputProps && this.props.textInputProps.onBlur) {
             this.props.textInputProps.onBlur(e);
-          }
-          this.setState({ focus: false });
+        }
+        this.setState({ focus: false, item: `${"+"}${this.props.selectedValue}` });
         }}
         // value={this.state.item.split(/(\d+)/)[1]}
-        value={this.state.item.split(/(\d+)/)[0] == "" ? "" : this.state.item.split(/(\d+)/).length > 3 ? this.state.item.split(/(\d+)/)[0] + this.state.item.split(/(\d+)/)[1] + this.state.item.split(/(\d+)/)[2] + this.state.item.split(/(\d+)/)[3] : this.state.item.split(/(\d+)/)[0] + this.state.item.split(/(\d+)/)[1]}
+        value={this.state.item.match(/[a-z]/i) ? this.state.item : this.state.item.split(/(\d+)/).length > 3 ? this.state.item.split(/(\d+)/)[0] + this.state.item.split(/(\d+)/)[1] + this.state.item.split(/(\d+)/)[2] + this.state.item.split(/(\d+)/)[3] : this.state.item.split(/(\d+)/).length === 2 ? this.state.item.split(/(\d+)/)[0] + this.state.item.split(/(\d+)/)[1] : this.state.item.split()[0]}
       />
     )
     // return (
@@ -257,12 +260,12 @@ export default class SearchPicker extends Component {
       >
         { this.renderSelectedItems() }
         { this.renderTextInput() }
-        {this.renderListType()}
+        { this.renderListType() }
       </View>
     );
   };
 
-  renderSelectedItems(){
+  renderSelectedItems() {
     let items = this.props.selectedItems || [];
     if(items !== undefined && items.length > 0 && this.props.chip && this.props.multi){
      return  <View style={{flexDirection: 'row',  flexWrap: 'wrap', paddingBottom: 10, marginTop: 5 }}>

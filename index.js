@@ -80,8 +80,8 @@ export default class SearchPicker extends Component {
       id: -1,
       name: searchedText
     };
-    console.log("searchedText", searchedText)
-    console.log("SPLIT", this.state.item.split(/(\d+)/))
+    // console.log("searchedText", searchedText)
+    // console.log("SPLIT", this.state.item.split(/(\d+)/))
     // console.log(searchedText.split(/(\d+)/))
     this.setState({ listItems: ac, item: searchedText });
     const onTextChange = this.props.onTextChange || this.props.textInputProps.onTextChange || this.props.onChangeText || this.props.textInputProps.onChangeText;
@@ -138,7 +138,7 @@ export default class SearchPicker extends Component {
           }}
         >
           { 
-            this.props.numberOfBoldValue && index < this.props.numberOfBoldValue
+            this.props.special.some((o) => item.includes('+' + o.code))
             ?
               <Text style={{ ...this.props.itemTextStyle, fontWeight: 'bold' }}>{item}</Text>
             :

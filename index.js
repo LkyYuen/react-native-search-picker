@@ -56,15 +56,41 @@ export default class SearchPicker extends Component {
   componentDidMount = () => {
     const listItems = this.props.items;
     const defaultIndex = this.props.defaultIndex;
-    if (defaultIndex && listItems.length > defaultIndex) {
+    if (defaultIndex && listItems.length >= defaultIndex) {
       this.setState({
         listItems,
+        // item: `${"+"}${this.props.selectedValue}`
         item: listItems[defaultIndex]
       });
     } else {
       this.setState({ listItems });
     }
   };
+
+  shouldComponentUpdate(nextProps, nextState) {
+    if (nextProps.items != this.props.items) {
+      // if (nextProps.selectedValue != nextProps.items[this.props.defaultIndex]) {
+      if (nextProps.selectedValue != this.state.item) {
+        if (this.state.focus) {
+          this.setState({
+            item: ""
+          });
+        }
+        else {
+          this.setState({
+            item: `${"+"}${nextProps.selectedValue}`
+          });
+        }
+      }
+      else {
+        this.setState({
+          listItems: nextProps.items,
+          item: nextProps.items[this.props.defaultIndex]
+        });
+      }
+    }
+    return true;
+  }
 
   searchedItems = searchedText => {
     let setSort = this.props.setSort;
@@ -165,7 +191,8 @@ export default class SearchPicker extends Component {
           this.props.onFocus && this.props.onFocus()
           this.setState({
             focus: true,
-            item: defaultItemValue,
+            item: "",
+            // item: defaultItemValue,
             listItems: this.props.items
           });
         } 
@@ -207,6 +234,8 @@ export default class SearchPicker extends Component {
         }
       }
     });
+    // console.log("selectedValue", this.props.selectedValue)
+    // console.log("item", this.state.item)
     return (
       <TextInput
         { ...textInputProps }
